@@ -1,4 +1,3 @@
-import os
 import networkx as nx
 import matplotlib.pyplot as plt
 
@@ -33,12 +32,11 @@ class arista():
 
 class grafo():
     head = None  # tipo nodo o vertice
-    g = None
 
     def __init__(self):
         self.head
-        self.g = nx.DiGraph()
 
+    @property
     def vacio(self):
         return (self.head is None)
 
@@ -64,7 +62,7 @@ class grafo():
         nuevo.sig = None
         nuevo.ady = None
         aux = self.head
-        if(self.vacio()):
+        if(self.vacio):
             self.head = nuevo
         else:
             while (aux.sig is not None):
@@ -91,11 +89,9 @@ class grafo():
         araux = None
         while (naux is not None):
             print(naux.dato+"->", end='')
-            self.g.add_node(naux.dato)
             araux = naux.ady
             while (araux is not None):
-                print(araux.ady.dato+"->", end='')
-                self.g.add_edge(naux.dato, araux.ady.dato)
+                print(araux.ady.dato+"->{}".format(araux.peso), end='')
 
                 araux = araux.sig
             naux = naux.sig
@@ -142,32 +138,99 @@ class grafo():
             if(flag):
                 print("los vertices no estan enlazados")
 
+    # implementacion dfs iterativo
+
+    def recorrido_profundidad(self, origen):
+        flag1, flag2 = True, True
+        actual = None
+        pila = []
+        listav = []  # lista visitados
+        pila.append(origen)
+        while pila:
+            actual = pila[-1]
+            pila.pop()
+            for i in listav:
+                if(i == actual):
+                    flag1 = False
+            if(flag1):
+                listav.append(actual)
+                arista_aux = actual.ady
+                while(arista_aux != None):
+                    flag2 = True
+                    for i in listav:
+                        if(arista_aux.ady == i):
+                            flag2 = False
+                    if(flag2):
+                        pila.append(arista_aux.ady)
+                    arista_aux = arista_aux.sig
+        for i, e in enumerate(listav):
+            if(i == len(listav)-1):
+                print(e.dato, end='')
+                break
+            print('{} -> '.format(e.dato), end='')
+        print('')
+
+    # implementacion bfs iterativo
+
+    def recorrido_anchura(self, origen):
+        flag1, flag2 = True, True
+        actual = None
+        cola = []
+        listav = []  # lista visitados
+        cola.append(origen)
+        while cola:
+            actual = cola[0]
+            cola.pop(0)
+            for i in listav:
+                if(i == actual):
+                    flag1 = False
+            if(flag1):
+                listav.append(actual)
+                arista_aux = actual.ady
+                while(arista_aux != None):
+                    flag2 = True
+                    for i in listav:
+                        if(arista_aux.ady == i):
+                            flag2 = False
+                    if(flag2):
+                        cola.append(arista_aux.ady)
+                    arista_aux = arista_aux.sig
+        for i, e in enumerate(listav):
+            if(i == len(listav)-1):
+                print(e.dato, end='')
+                break
+            print('{} -> '.format(e.dato), end='')
+        print('')
+
     def graficar(self):
+        g = nx.DiGraph()
         naux = self.head
         araux = None
         while (naux is not None):
-            self.g.add_node(naux.dato)
+            g.add_node(naux.dato)
             araux = naux.ady
             while (araux is not None):
-                self.g.add_edge(naux.dato, araux.ady.dato, weight=araux.peso)
-                # print(araux.peso)
+                g.add_edge(naux.dato, araux.ady.dato, weight=araux.peso)
                 araux = araux.sig
             naux = naux.sig
-        #para sacar los labels de los nodos
-        labels = {}    
-        for node in self.g.nodes():
+        # para sacar los labels de los nodos
+        labels = {}
+        for node in g.nodes():
             labels[node] = node
-        pos = nx.layout.spring_layout(self.g)
-        nx.draw_networkx_labels(self.g,pos,labels,font_size=16,font_color='white')
-        #para sacar los pesos de las aristas
-        labels = nx.get_edge_attributes(self.g,'weight')
+
+        pos = nx.layout.circular_layout(g)
+        # print(pos)
+        nx.draw_networkx_labels(g, pos, labels,
+                                font_size=16, font_color='white')
+        # para sacar los pesos de las aristas
+        label = nx.get_edge_attributes(g, 'weight')
         # para graficar los labels
-        nx.draw_networkx_edge_labels(self.g,pos,edge_labels=labels)
-        nodes = nx.draw_networkx_nodes(
-            self.g,pos, node_color="blue")
+        nx.draw_networkx_edge_labels(g, pos, edge_labels=label)
+        nx.draw_networkx_nodes(
+            g, pos, node_color="blue")
         # para graficar las aristas dirigidas
-        edges = nx.draw_networkx_edges(
-            self.g,pos,
+        nx.draw_networkx_edges(
+            g, pos,
             arrowstyle="->",
             arrowsize=10,
             width=2,
