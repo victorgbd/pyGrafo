@@ -56,6 +56,14 @@ class grafo():
             aux = aux.sig
         return None
 
+    def get_aristas(self, origen):
+        lista = []
+        arista_aux = origen.ady
+        while (arista_aux is not None):
+            lista.append(arista_aux)
+            arista_aux = arista_aux.sig
+        return lista
+
     def insert_vertice(self, dato):
         nuevo = vertice()
         nuevo.dato = dato
@@ -88,10 +96,10 @@ class grafo():
         naux = self.head
         araux = None
         while (naux is not None):
-            print(naux.dato+"->", end='')
+            print(naux.dato+" -> ", end='')
             araux = naux.ady
             while (araux is not None):
-                print(araux.ady.dato+"->{}".format(araux.peso), end='')
+                print(araux.ady.dato+" {} ->".format(araux.peso), end='')
 
                 araux = araux.sig
             naux = naux.sig
@@ -142,7 +150,7 @@ class grafo():
 
     def recorrido_profundidad(self, origen):
         flag1, flag2 = True, True
-        actual = None
+        actual = None  # nodo o arista
         pila = []
         listav = []  # lista visitados
         pila.append(origen)
@@ -201,6 +209,19 @@ class grafo():
                 break
             print('{} -> '.format(e.dato), end='')
         print('')
+
+    def dijkstra(self):
+        g = nx.DiGraph()
+        naux = self.head
+        araux = None
+        while (naux is not None):
+            g.add_node(naux.dato)
+            araux = naux.ady
+            while (araux is not None):
+                g.add_edge(naux.dato, araux.ady.dato, weight=araux.peso)
+                araux = araux.sig
+            naux = naux.sig
+        print(nx.single_source_dijkstra(g, source='a', target='c', weight=True))
 
     def graficar(self):
         g = nx.DiGraph()

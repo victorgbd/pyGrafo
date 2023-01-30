@@ -41,7 +41,9 @@ g.insert_arista(g.get_vertice("e"), g.get_vertice("f"), 41)
 # g.eliminar_vertice(g.get_vertice("d"))
 
 
-g.print_grafo()
-g.recorrido_anchura(g.get_vertice("b"))
-g.recorrido_profundidad(g.get_vertice("b"))
-g.graficar()
+# g.print_grafo()
+# g.recorrido_anchura(g.get_vertice("b"))
+# g.recorrido_profundidad(g.get_vertice("b"))
+# g.graficar()
+# print(g.get_aristas(g.get_vertice('b')))
+# g.dijkstra()
