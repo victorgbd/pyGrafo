@@ -52,9 +52,3 @@ g.insert_arista(g.get_vertice("f"), g.get_vertice(3), 15)
 # print(g.get_aristas(g.get_vertice('b')))
 # g.dijkstra(source='a', target='c')
 # g.astar(source='a', target='c')
-# i = 100
-# while True:
-#     print(i)
-#     if(i == 0):
-#         break
-#     i -= 1
