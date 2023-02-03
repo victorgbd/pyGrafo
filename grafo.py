@@ -96,7 +96,7 @@ class grafo():
         naux = self.head
         araux = None
         while (naux is not None):
-            print(naux.dato+" -> ", end='')
+            print("{} -> ".format(naux.dato), end='')
             araux = naux.ady
             while (araux is not None):
                 print(araux.ady.dato+" {} ->".format(araux.peso), end='')
@@ -210,7 +210,7 @@ class grafo():
             print('{} -> '.format(e.dato), end='')
         print('')
 
-    def dijkstra(self):
+    def dijkstra(self, source, target):
         g = nx.DiGraph()
         naux = self.head
         araux = None
@@ -221,7 +221,22 @@ class grafo():
                 g.add_edge(naux.dato, araux.ady.dato, weight=araux.peso)
                 araux = araux.sig
             naux = naux.sig
-        print(nx.single_source_dijkstra(g, source='a', target='c', weight=True))
+        print("largo:{} ruta:{}".format(nx.dijkstra_path_length(g, source=source, target=target,
+              weight=True), nx.dijkstra_path(g, source=source, target=target, weight=True)))
+
+    def astar(self, source, target):
+        g = nx.DiGraph()
+        naux = self.head
+        araux = None
+        while (naux is not None):
+            g.add_node(naux.dato)
+            araux = naux.ady
+            while (araux is not None):
+                g.add_edge(naux.dato, araux.ady.dato, weight=araux.peso)
+                araux = araux.sig
+            naux = naux.sig
+        print("largo:{} ruta:{}".format(nx.astar_path_length(g, source=source, target=target,
+              weight=True), nx.astar_path(g, source=source, target=target, weight=True)))
 
     def graficar(self):
         g = nx.DiGraph()
